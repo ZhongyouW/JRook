@@ -11,6 +11,8 @@ Write base class
 Design.
 ### Hand
 Collection of cards.
+### Deck
+Collection of all cards.
 ### Nest
 Collection of cards with extra methods for special restrictions.
 ### Player
