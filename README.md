@@ -1,29 +1,26 @@
-# JRook
+## JRook
 
-The card game Rook written in Java with local players.
-
-# To Do
+## To Do
 
 Write base class
 
-### Card
+#Card
 4 Card colors and numbers.
-Design.
-### Hand
+Design. 
+
+#Hand
 Collection of cards.
-### Deck
-Collection of all cards.
-### Nest
+#Nest
 Collection of cards with extra methods for special restrictions.
-### Player
+#Player
 Any entity playing the game with cards
-### Agent
+#Agent
 Computer AI playing the game.
-### Human
+#Human
 Human player.
-### Round
+#Round
 A single round within the game, winning a round adds the bid (or subtract the bid) from the winning team
-### Game
+#Game
 The game manager for controlling the flow of the game.
-### Rook
-GUI manager.
+#Rook
+GUI manager. 
