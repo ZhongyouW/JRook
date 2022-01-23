@@ -1,4 +1,7 @@
+import java.util.Scanner;
+
 public class Human extends Player{
+    Scanner kb = new Scanner(System.in);
     public Human(String name) {
         super(name);
     }
@@ -13,7 +16,7 @@ public class Human extends Player{
 
     @Override
     public int getBid(int currentBid) {
-        return 0;
+        return kb.nextInt();
     }
 
     @Override

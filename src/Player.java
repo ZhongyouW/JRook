@@ -4,8 +4,11 @@
  */
 abstract class Player {
     String name;
-    short points;
     Hand hand;
+    /**
+     * Cards taken from tricks which will be tallied towards the points
+     */
+    Hand taken;
 
     public Player(String name, Hand hand) {
         this.name = name;
@@ -28,4 +31,11 @@ abstract class Player {
      * @return return the color which this player wish to be the trump card
      */
     public abstract Card.Suit getPreferredColor();
+
+    /**
+     * @return the total value of the player's taken pile
+     */
+    public int getPoints() {
+        return taken.getValue();
+    }
 }

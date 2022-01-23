@@ -12,6 +12,7 @@ public class Hand {
      * Class constructor that initiates the hand.
      */
     public Hand() {
+        hand = new HashMap<>();
         for(Card.Suit suit : Card.Suit.values()) {
             this.hand.put(suit, new ArrayList<Card>());
         }
@@ -62,6 +63,9 @@ public class Hand {
         for(ArrayList<Card> suit : hand.values()) {
             for (Card card : suit) {
                 switch (card.value) {
+                    case 1:
+                        value += 15;
+                        break;
                     case 5:
                         value += 5;
                         break;
@@ -84,5 +88,15 @@ public class Hand {
             size += suit.size();
         }
         return size;
+    }
+
+    public String toString() {
+        String result = "";
+        for (ArrayList<Card> suit : hand.values()) {
+            for (Card card : suit) {
+                result += card + ", ";
+            }
+        }
+        return result;
     }
 }

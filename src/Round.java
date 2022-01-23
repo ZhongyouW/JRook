@@ -9,10 +9,11 @@ public class Round {
 
     public Round(Player[] players) {
         this.players = players;
-        deck = new Deck(5, 14);
-        Card trumpCard = new Card(Card.Suit.BLUE, 20, true);
+        deck = new Deck(1, 14);
+        deck.shuffle();
+        Card trumpCard = new Card(Card.Suit.BLUE, 0, true);
         deck.addCard(trumpCard);
-        distributeCard(5);
+        distributeCard(1);
         //Prototype game with only text input
         //Pre-round bidding
         Player topBidder = startBid();
@@ -26,21 +27,28 @@ public class Round {
         boolean bidding = true;
         Player topBidder = players[0];
         int bid = 70;
+        int continuousPass = 0;
         while(bidding) {
-            bidding = false;
             for (Player player : players) {
                 int myBid = bid;
 
                 do {
                     myBid = player.getBid(bid);
-                } while(myBid > bid || myBid == -1); //Repeat until the game gets valid input
+                } while(myBid <= bid && myBid != -1); //Repeat until the game gets valid input
 
                 if(myBid > bid) {
                     bid = myBid;
                     topBidder = player;
+                    System.out.printf("%s bid %d\n", player.name, bid);
+                    continuousPass = 0;
+                } else {
+                    System.out.printf("%s pass\n", player.name);
+                    continuousPass++;
                 }
-
-                bidding |= myBid != -1;
+                if(continuousPass == players.length - 1) {
+                    bidding = false;
+                    break;
+                }
             }
         }
         return topBidder;
@@ -49,7 +57,12 @@ public class Round {
     void distributeCard(int remainder) {
         int index = 0;
         while(deck.size() > remainder) {
-            players[index % players.length].hand.addCard(deck.draw());
+            Card drawn = deck.draw();
+            Player player = players[index % players.length];
+
+            drawn.owner = player;
+            player.hand.addCard(drawn);
+
             index++;
         }
     }
