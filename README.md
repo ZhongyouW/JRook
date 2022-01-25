@@ -1,26 +1,30 @@
 ## JRook
 
+## Dependency
+
+LWJGL 3.3.0
+
 ## To Do
 
 Write base class
 
-#Card
+# Card
 4 Card colors and numbers.
 Design. 
 
-#Hand
+# Hand
 Collection of cards.
-#Nest
+# Nest
 Collection of cards with extra methods for special restrictions.
-#Player
+# Player
 Any entity playing the game with cards
-#Agent
+# Agent
 Computer AI playing the game.
-#Human
+# Human
 Human player.
-#Round
+# Round
 A single round within the game, winning a round adds the bid (or subtract the bid) from the winning team
-#Game
+# Game
 The game manager for controlling the flow of the game.
-#Rook
+# Rook
 GUI manager. 
