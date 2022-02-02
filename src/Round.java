@@ -6,6 +6,7 @@ public class Round {
     Player[] players;
     Deck deck;
     Card.Suit trump;
+    public Boolean started = false;
 
     public Round(Player[] players) {
         this.players = players;
@@ -14,8 +15,10 @@ public class Round {
         Card trumpCard = new Card(Card.Suit.BLUE, 0, true);
         deck.addCard(trumpCard);
         distributeCard(1);
+
         //Prototype game with only text input
         //Pre-round bidding
+        started = true;
         Player topBidder = startBid();
         trump = topBidder.getPreferredColor();
         trumpCard.suit = trump;

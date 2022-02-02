@@ -37,15 +37,21 @@ public class Card {
         this.rook = rook;
     }
 
-    public JLabel getImage(Graphics g) {
-        BufferedImage image = new BufferedImage(20, 20, BufferedImage.TYPE_3BYTE_BGR);
+    public JButton getImageButton(int width, int height) {
+        Image image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR).getScaledInstance(width, height,  Image.SCALE_SMOOTH);;
         try {
-            image = ImageIO.read(new File("resource\\card\\"+value + ".png"));
+            File file = new File("resource\\card\\"+value + ".png");
+            if(!file.exists())  {
+                System.out.println(value + ".png image can't be found!");
+                file = new File("resource\\card\\BlankCard.png");
+            }
+            image = ImageIO.read(file);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        return new JLabel(new ImageIcon(image));
+        JButton button = new JButton(new ImageIcon(image));
+        button.setPreferredSize(new Dimension(width, height));
+        return button;
     }
 
     public String toString() {

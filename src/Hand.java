@@ -1,3 +1,5 @@
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -7,7 +9,13 @@ import java.util.HashMap;
  */
 public class Hand {
     public HashMap<Card.Suit, ArrayList<Card>> hand;
+    public JPanel panel;
 
+    Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+    final int screenWidth = size.width;
+    final int screenHeight = size.height;
+    final int height = screenHeight/5;
+    final int width = screenWidth*5/6;
     /**
      * Class constructor that initiates the hand.
      */
@@ -16,6 +24,10 @@ public class Hand {
         for(Card.Suit suit : Card.Suit.values()) {
             this.hand.put(suit, new ArrayList<Card>());
         }
+
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER, -height/2, 0));
+        panel.setPreferredSize(new Dimension(width, height));
+        panel.setBackground(new Color(210,210,210));
     }
 
     /**
@@ -41,6 +53,7 @@ public class Hand {
 
     public void addCard(Card card) {
         hand.get(card.suit).add(card);
+        panel.add(card.getImageButton((int)(height*0.722f),height));
     }
 
     /**
@@ -88,6 +101,10 @@ public class Hand {
             size += suit.size();
         }
         return size;
+    }
+
+    public JPanel getPanel() {
+        return panel;
     }
 
     public String toString() {

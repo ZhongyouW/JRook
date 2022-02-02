@@ -3,120 +3,56 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Toolkit;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 
-public class Game {
-	private JPanel top, bottom, left, right, center;
-	private Process serverProcess;
+public class Game extends JFrame {
+	Player[] players;
+	public Game(Player[] players) {
+		this.players = players;
+	}
 
 	public static void main(String[] args) throws IOException {
-		Game g = new Game();
-		g.panel();
-	}
-	
-	public void startServer() throws IOException {
-		if(serverProcess != null)
-			return;
-		ProcessBuilder pb = new ProcessBuilder("node", "deez.js");
-		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-		pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-		serverProcess = pb.start();
-		
-		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-			public void run() {
-				System.out.println("Program Ended Successfully.");
-				if(serverProcess.isAlive())
-					serverProcess.destroy();
-			}
-		}, "Shutdown-thread"));
+		Player[] players = {new PwnPawn(), new PwnPawn(), new PwnPawn(), new PwnPawn()};
+		Game g = new Game(players);
+		g.initiate();
+		g.startRound();
 	}
 
-	public void panel() throws IOException {
+	public void initiate() throws IOException {
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
 
 		final int width = size.width;
 		final int height = size.height;
-		Color casino = new Color(3, 125, 98);
-		Color casinoDarker = new Color(133, 54, 14);
+		Color background = new Color(231, 231, 231);
+		Color zone = new Color(219, 220, 221);
 
-		JFrame frame = new JFrame("JRook Host");
+        this.setBackground(background);
+		this.setIconImage(null);
+		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		frame.setIconImage(null);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		frame.setSize(size);
-		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
-		frame.setVisible(true);
+		this.setSize(size);
+		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setVisible(true);
+        this.setLayout(new GridBagLayout());
 
-		top = new JPanel();
-		top.setBackground(casinoDarker);
-		top.setPreferredSize(new Dimension(width, height / 5));
-		top.setLayout(new GridBagLayout());
-		
-		JLabel title = new JLabel("Welcome to JRook!");
-		title.setFont(new Font("Arial", 1, 75));
-		title.setForeground(new Color(230, 230, 230));
-		top.add(title, new GridBagConstraints());
+	}
 
-		bottom = new JPanel();
-		bottom.setBackground(casino);
-		bottom.setPreferredSize(new Dimension(width, height / 4));
-
-		left = new JPanel();
-		left.setPreferredSize(new Dimension(width / 6, height));
-		left.setBackground(casino);
-
-		right = new JPanel();
-		right.setPreferredSize(new Dimension(width / 6, height));
-		right.setBackground(casino);
-
-		center = new JPanel();
-		center.setBackground(casino);
-		GridLayout g = new GridLayout(2, 1);
-		g.setVgap(height / 15);
-		center.setLayout(g);
-		center.setBorder(new EmptyBorder(100, 200, 100, 200));
-		
-		JButton host = new JButton("Host a Game");
-		host.setBackground(Color.WHITE);
-		host.setFocusPainted(false);
-		host.setFont(new Font("Arial", 1, 75));
-		host.addMouseListener(new MouseAdapter() {
-			public void mousePressed(MouseEvent e) {
-				try {
-					startServer();
-					JOptionPane.showMessageDialog(null, "Server has been started!");
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
+	private void startRound() {
+		Round test = new Round(players);
+		while(!test.started)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
 			}
-		});
-		
-		JButton join = new JButton("Join a Game");
-		join.setBackground(Color.WHITE);
-		join.setFocusPainted(false);
-		join.setFont(new Font("Arial", 1, 75));
-		
-		center.add(host);
-		center.add(join);
-
-		frame.add(top, BorderLayout.PAGE_START);
-		frame.add(left, BorderLayout.LINE_START);
-		frame.add(right, BorderLayout.LINE_END);
-		frame.add(center, BorderLayout.CENTER);
-		frame.add(bottom, BorderLayout.PAGE_END);
+		}
+		GridBagConstraints constraint = new GridBagConstraints();
+		constraint.gridy = 4;
+		constraint.gridwidth = 3;
+		System.out.println(players[0].hand);
+		this.add(players[0].hand.panel, constraint);
 	}
 }

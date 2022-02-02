@@ -20,6 +20,6 @@ public class Agent extends Player {
     @Override
     public Card.Suit getPreferredColor() {
         Card.Suit[] suit = Card.Suit.values();
-        return suit[(int)(Math.random() * (suit.length + 1))];
+        return suit[(int)(Math.random() * suit.length)];
     }
 }
