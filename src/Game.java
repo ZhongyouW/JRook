@@ -16,8 +16,8 @@ public class Game extends JFrame {
 	public static void main(String[] args) throws IOException {
 		Player[] players = {new PwnPawn(), new PwnPawn(), new PwnPawn(), new PwnPawn()};
 		Game g = new Game(players);
-		g.initiate();
 		g.startRound();
+		g.initiate();
 	}
 
 	public void initiate() throws IOException {
@@ -35,11 +35,10 @@ public class Game extends JFrame {
 		this.setSize(size);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);
-        this.setLayout(new GridBagLayout());
-
 	}
 
 	private void startRound() {
+		this.setLayout(new GridBagLayout());
 		Round test = new Round(players);
 		while(!test.started)
 		{
