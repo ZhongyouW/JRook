@@ -2,7 +2,10 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.LookupOp;
 import java.io.File;
+import java.util.HashMap;
 
 /** Represents the cards used in a card game
  * @author Zhongyou Wu
@@ -15,6 +18,7 @@ public class Card {
         BLUE,
         BLACK,
     }
+    HashMap<Suit, Color> suitColor;
 
     boolean rook;
     Player owner;
@@ -24,11 +28,15 @@ public class Card {
     public Card(Suit suit, int value) {
         this.value = value;
         this.suit = suit;
+        suitColor = new HashMap<>();
+        suitColor.put(suit.RED, new Color(231, 70, 52));
+        suitColor.put(suit.GREEN, new Color(92, 171, 52));
+        suitColor.put(suit.BLUE, new Color(53, 107, 171));
+        suitColor.put(suit.BLACK, new Color(20, 20, 20));
     }
 
     public Card(Suit suit, int value, Player owner) {
-        this.value = value;
-        this.suit = suit;
+        this(suit, value);
         this.owner = owner;
     }
 
@@ -37,8 +45,15 @@ public class Card {
         this.rook = rook;
     }
 
+    public BufferedImage recolor(BufferedImage image, Color from, Color to) {
+        BufferedImageOp lookup = new LookupOp(new ColorMapper(from, to), null);
+        BufferedImage convertedImage = lookup.filter(image, null);
+        return convertedImage;
+    }
+
     public JButton getImageButton(int width, int height) {
-        Image image = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR).getScaledInstance(width, height,  Image.SCALE_SMOOTH);;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
+        //Get Image file
         try {
             File file = new File("resource\\card\\"+value + ".png");
             if(!file.exists())  {
@@ -49,8 +64,13 @@ public class Card {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        JButton button = new JButton(new ImageIcon(image));
+        //Recolor and rescale the image
+        Image img = recolor(image, new Color(218, 62, 40), suitColor.get(suit)).getScaledInstance(width, height,  Image.SCALE_SMOOTH);
+        //Create the button
+        JButton button = new JButton(new ImageIcon(img));
         button.setPreferredSize(new Dimension(width, height));
+        button.setBackground(new Color(0,0,0,1));
+        button.setBorderPainted(false);
         return button;
     }
 
