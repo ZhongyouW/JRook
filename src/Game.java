@@ -9,15 +9,21 @@ import java.io.IOException;
 
 public class Game extends JFrame {
 	Player[] players;
+	public static Game game;
+
 	public Game(Player[] players) {
 		this.players = players;
 	}
 
 	public static void main(String[] args) throws IOException {
-		Player[] players = {new PwnPawn(), new PwnPawn(), new PwnPawn(), new PwnPawn()};
-		Game g = new Game(players);
-		g.startRound();
-		g.initiate();
+		if(game == null) {
+			Player[] players = {new PwnPawn(), new PwnPawn(), new PwnPawn(), new PwnPawn()};
+			game = new Game(players);
+			game.startRound();
+			game.initiate();
+		} else {
+			throw new IllegalStateException("Only one game instance can exist at a time!");
+		}
 	}
 
 	public void initiate() throws IOException {
@@ -28,10 +34,10 @@ public class Game extends JFrame {
 		Color background = new Color(231, 231, 231);
 		Color zone = new Color(219, 220, 221);
 
-        this.setBackground(background);
+		this.setBackground(background);
 		this.setIconImage(null);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		this.setSize(size);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setVisible(true);

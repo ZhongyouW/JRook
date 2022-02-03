@@ -27,6 +27,7 @@ public class Hand {
 
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER, -height/2, 0));
         panel.setPreferredSize(new Dimension(width, height));
+        panel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         panel.setBackground(new Color(210,210,210));
     }
 

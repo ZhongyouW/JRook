@@ -1,6 +1,8 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.BufferedImageOp;
 import java.awt.image.LookupOp;
@@ -58,7 +60,7 @@ public class Card {
             File file = new File("resource\\card\\"+value + ".png");
             if(!file.exists())  {
                 System.out.println(value + ".png image can't be found!");
-                file = new File("resource\\card\\BlankCard.png");
+                file = new File("resource\\card\\Crow.png");
             }
             image = ImageIO.read(file);
         } catch (Exception e) {
@@ -70,11 +72,32 @@ public class Card {
         JButton button = new JButton(new ImageIcon(img));
         button.setPreferredSize(new Dimension(width, height));
         button.setBackground(new Color(0,0,0,1));
+        button.setContentAreaFilled(false);
         button.setBorderPainted(false);
+        //On Click
+        button.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.out.println(suit + " of " + value + " is played.");
+            }
+        });
+        //On Hover
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                System.out.println("Hovering over " + suit + " of " + value);
+                button.setSize(new Dimension(width*2, height));
+                Game.game.repaint();
+            }
+
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setSize(new Dimension(width, height));
+                Game.game.repaint();
+            }
+        });
         return button;
     }
 
     public String toString() {
-        return suit + " " + value;
+        return suit + " of " + value;
     }
 }
