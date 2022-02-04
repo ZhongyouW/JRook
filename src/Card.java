@@ -89,15 +89,12 @@ public class Card {
         //On Hover
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                button.setSize(new Dimension(width, height * 2));
                 button.setLocation(button.getX(), finalY);
                 Game.game.repaint();
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                button.setSize(new Dimension(width, height));
-                button.setLocation(button.getX(), initialY);
-                button.setVerticalAlignment(SwingConstants.CENTER);
+                button.setLocation(button.getX(), (int)(finalY + button.getSize().getHeight()/8));
                 Game.game.repaint();
             }
         });
