@@ -8,20 +8,22 @@ import java.io.File;
 import java.io.IOException;
 
 public class Game extends JFrame {
-	Player[] players;
+	public Player[] players;
 	public static Game game;
+	public Round currentRound;
 
 	public Game(Player[] players) {
 		this.players = players;
 	}
 
 	public static void main(String[] args) throws IOException {
-		if (game == null) {
-			//game.startServer();
-			Player[] players = { new Human("Bob"), new PwnPawn()/*, new PwnPawn(), new PwnPawn()*/ };
+		if(game == null) {
+			//Player have to go first, will fix later if we add multiplayer
+			Player[] players = {new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn()};
 			game = new Game(players);
 			game.initiate();
 			game.startRound();
+			game.currentRound.start();
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
 		}
@@ -43,27 +45,30 @@ public class Game extends JFrame {
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
 		this.setLayout(new BorderLayout());
 		this.setVisible(true);
+		//Set up Center Table
+		//JPanel
+		//Set up main player's hand
+		this.add(players[0].hand.panel, BorderLayout.SOUTH);
 	}
 
 	private void startRound() {
-		Round test = new Round(players);
-		System.out.println(players[0].hand);
-		this.setVisible(true);
+		currentRound = new Round(players);
+		while(!currentRound.started)
+		{
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public static String getBid(int currentBid) {
 		return JOptionPane.showInputDialog(null,
 				String.format("Input your bid: Min = %d, Max = %d", currentBid + 1, 200));
 	}
-	
+
 	public static void alert(String s) {
 		JOptionPane.showMessageDialog(null, s);
 	}
-	/*
-	public void startServer() throws IOException {
-		ProcessBuilder pb = new ProcessBuilder("call node.exe socket.js");
-		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
-		pb.redirectError(ProcessBuilder.Redirect.INHERIT);
-		Process p = pb.start();
-	}*/
 }

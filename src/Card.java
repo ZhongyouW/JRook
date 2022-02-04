@@ -24,6 +24,7 @@ public class Card {
 
     boolean rook;
     Player owner;
+    JButton button;
     Suit suit;
     int value;
     int initialY;
@@ -80,10 +81,11 @@ public class Card {
         initialY = button.getY();
         finalY = (int)(initialY - button.getSize().getHeight()/4);
         //On Click
+        Card instance = this;
         button.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                System.out.println(suit + " of " + value + " is played.");
+                owner.setPlay(instance);
             }
         });
         //On Hover
@@ -98,6 +100,7 @@ public class Card {
                 Game.game.repaint();
             }
         });
+        this.button = button;
         return button;
     }
 

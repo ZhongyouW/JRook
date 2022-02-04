@@ -23,15 +23,15 @@ public class Hand {
      * Class constructor that initiates the hand.
      */
     public Hand() {
-        hand = new HashMap<>();
-        for(Card.Suit suit : Card.Suit.values()) {
-            this.hand.put(suit, new ArrayList<Card>());
-        }
-
         panel = new JPanel(new FlowLayout(FlowLayout.CENTER, -cardHeight/2, (height - cardHeight)/2));
         panel.setPreferredSize(new Dimension(width, height));
         panel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         panel.setBackground(new Color(210,210,210));
+
+        hand = new HashMap<>();
+        for(Card.Suit suit : Card.Suit.values()) {
+            this.hand.put(suit, new ArrayList<Card>());
+        }
     }
 
     /**
@@ -58,6 +58,13 @@ public class Hand {
     public void addCard(Card card) {
         hand.get(card.suit).add(card);
         panel.add(card.getImageButton((int)(cardHeight * ratio),cardHeight));
+        Game.game.repaint();
+    }
+
+    public void removeCard(Card card) {
+        hand.get(card.suit).remove(card);
+        panel.remove(card.button);
+        Game.game.repaint();
     }
 
     /**

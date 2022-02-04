@@ -1,15 +1,17 @@
+import java.util.ArrayList;
+
 public class Agent extends Player {
     public Agent(String name) {
         super(name);
     }
 
-    public Agent(String name, Hand hand) {
-        super(name, hand);
+    @Override
+    public Card getPlay(ArrayList<Card> history) {
+        return null;
     }
 
-    @Override
-    public Card getPlay() {
-        return null;
+    public Agent(String name, Hand hand) {
+        super(name, hand);
     }
 
     @Override
