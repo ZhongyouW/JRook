@@ -16,11 +16,12 @@ public class Game extends JFrame {
 	}
 
 	public static void main(String[] args) throws IOException {
-		if(game == null) {
-			Player[] players = {new PwnPawn(), new PwnPawn(), new PwnPawn(), new PwnPawn()};
+		if (game == null) {
+			//game.startServer();
+			Player[] players = { new Human("Bob"), new PwnPawn()/*, new PwnPawn(), new PwnPawn()*/ };
 			game = new Game(players);
-			game.startRound();
 			game.initiate();
+			game.startRound();
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
 		}
@@ -40,24 +41,29 @@ public class Game extends JFrame {
 
 		this.setSize(size);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setLayout(new BorderLayout());
 		this.setVisible(true);
 	}
 
 	private void startRound() {
-		this.setLayout(new GridBagLayout());
 		Round test = new Round(players);
-		while(!test.started)
-		{
-			try {
-				Thread.sleep(1000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		GridBagConstraints constraint = new GridBagConstraints();
-		constraint.gridy = 4;
-		constraint.gridwidth = 3;
 		System.out.println(players[0].hand);
-		this.add(players[0].hand.panel, constraint);
+		this.setVisible(true);
 	}
+
+	public static String getBid(int currentBid) {
+		return JOptionPane.showInputDialog(null,
+				String.format("Input your bid: Min = %d, Max = %d", currentBid + 1, 200));
+	}
+	
+	public static void alert(String s) {
+		JOptionPane.showMessageDialog(null, s);
+	}
+	/*
+	public void startServer() throws IOException {
+		ProcessBuilder pb = new ProcessBuilder("call node.exe socket.js");
+		pb.redirectOutput(ProcessBuilder.Redirect.INHERIT);
+		pb.redirectError(ProcessBuilder.Redirect.INHERIT);
+		Process p = pb.start();
+	}*/
 }
