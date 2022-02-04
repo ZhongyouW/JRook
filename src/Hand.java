@@ -16,6 +16,9 @@ public class Hand {
     final int screenHeight = size.height;
     final int height = screenHeight/5;
     final int width = screenWidth*5/6;
+    final double ratio = 0.722;
+    final int cardHeight = height * 3 / 4;
+    final int cardWidth = (int) (cardHeight * ratio);
     /**
      * Class constructor that initiates the hand.
      */
@@ -25,7 +28,7 @@ public class Hand {
             this.hand.put(suit, new ArrayList<Card>());
         }
 
-        panel = new JPanel(new FlowLayout(FlowLayout.CENTER, -height/2, 0));
+        panel = new JPanel(new FlowLayout(FlowLayout.CENTER, -cardHeight/2, (height - cardHeight)/2));
         panel.setPreferredSize(new Dimension(width, height));
         panel.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
         panel.setBackground(new Color(210,210,210));
@@ -54,7 +57,7 @@ public class Hand {
 
     public void addCard(Card card) {
         hand.get(card.suit).add(card);
-        panel.add(card.getImageButton((int)(height*0.722f),height));
+        panel.add(card.getImageButton((int)(cardHeight * ratio),cardHeight));
     }
 
     /**
@@ -118,3 +121,4 @@ public class Hand {
         return result;
     }
 }
+
