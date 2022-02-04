@@ -1,3 +1,5 @@
+import java.awt.BorderLayout;
+
 /** Represents a round of rook where players play tricks until the deck is empty
  * @author Zhongyou Wu
  * @author Cromlechs#5019
@@ -6,7 +8,7 @@ public class Round {
     Player[] players;
     Deck deck;
     Card.Suit trump;
-    public Boolean started = false;
+    public static Boolean started = false, bidding = false;
 
     public Round(Player[] players) {
         this.players = players;
@@ -19,6 +21,8 @@ public class Round {
         //Prototype game with only text input
         //Pre-round bidding
         started = true;
+        Game.game.add(players[0].hand.panel, BorderLayout.SOUTH);
+        Game.game.setVisible(true);
         Player topBidder = startBid();
         trump = topBidder.getPreferredColor();
         trumpCard.suit = trump;
@@ -27,7 +31,7 @@ public class Round {
     }
 
     Player startBid() {
-        boolean bidding = true;
+        bidding = true;
         Player topBidder = players[0];
         int bid = 70;
         int continuousPass = 0;
