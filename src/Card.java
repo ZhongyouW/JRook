@@ -26,7 +26,10 @@ public class Card {
     Player owner;
     Suit suit;
     int value;
-
+    int initialY;
+    int finalY;
+    
+    
     public Card(Suit suit, int value) {
         this.value = value;
         this.suit = suit;
@@ -74,6 +77,8 @@ public class Card {
         button.setBackground(new Color(0,0,0,1));
         button.setContentAreaFilled(false);
         button.setBorderPainted(false);
+        initialY = button.getY();
+        finalY = (int)(initialY - button.getSize().getHeight()/4);
         //On Click
         button.addActionListener(new ActionListener() {
             @Override
@@ -84,13 +89,15 @@ public class Card {
         //On Hover
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                System.out.println("Hovering over " + suit + " of " + value);
-                button.setSize(new Dimension(width*2, height));
+                button.setSize(new Dimension(width, height * 2));
+                button.setLocation(button.getX(), finalY);
                 Game.game.repaint();
             }
 
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 button.setSize(new Dimension(width, height));
+                button.setLocation(button.getX(), initialY);
+                button.setVerticalAlignment(SwingConstants.CENTER);
                 Game.game.repaint();
             }
         });
