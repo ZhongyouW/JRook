@@ -30,6 +30,7 @@ public class Card {
 	int value;
 	int initialY;
 	int finalY;
+	BufferedImage img;
 
 	public Card(Suit suit, int value) {
 		this.value = value;
@@ -89,8 +90,10 @@ public class Card {
 		try {
 			System.out.println(owner.human);
 			File file = null;
+			File file2 = null;
 			if (!owner.human) {
 				file = new File("resource\\card\\Back.png");
+				file2 = new File("resource\\card\\" + value + ".png");
 			} else {
 				file = new File("resource\\card\\" + value + ".png");
 			}
@@ -98,20 +101,26 @@ public class Card {
 				System.out.println(value + ".png image can't be found!");
 				file = new File("resource\\card\\Crow.png");
 			}
+			if(file2 != null && file2.exists()) {
+				BufferedImage x = ImageIO.read(file2);
+				this.img = recolor(x, new Color(218, 62, 40), suitColor.get(suit));
+			}
 			image = ImageIO.read(file);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		if(orientation == Hand.Orientation.EAST) {
+		if (orientation == Hand.Orientation.EAST) {
 			image = rotateImageByDegrees(image, 90);
-		} else if(orientation == Hand.Orientation.WEST) {
+		} else if (orientation == Hand.Orientation.WEST) {
 			image = rotateImageByDegrees(image, 270);
-		} else if(orientation == Hand.Orientation.SOUTH) {
+		} else if (orientation == Hand.Orientation.SOUTH) {
 			image = rotateImageByDegrees(image, 180);
 		}
 		// Recolor and rescale the image
-		Image img = recolor(image, new Color(218, 62, 40), suitColor.get(owner.human ? suit : Suit.RED))
-				.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		image = recolor(image, new Color(218, 62, 40), suitColor.get(owner.human ? suit : Suit.RED));
+		Image img = image.getScaledInstance(width, height, Image.SCALE_SMOOTH);
+		if(this.img == null)
+			this.img = image;
 		// Create the button
 		JButton button = new JButton(new ImageIcon(img));
 		button.setPreferredSize(new Dimension(width, height));
@@ -126,7 +135,8 @@ public class Card {
 			button.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent e) {
-					owner.setPlay(instance);
+					if (Trick.player == 0)
+						owner.setPlay(instance);
 				}
 			});
 			// On Hover

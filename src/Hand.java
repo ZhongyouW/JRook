@@ -1,6 +1,8 @@
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -47,14 +49,14 @@ public class Hand {
 	}
 
 	public void sidePanel() {
-		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, (int)(-cardHeight / 3)));
-		panel.setPreferredSize(new Dimension(height, width));
+		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, (int) (-cardHeight / 3)));
+		panel.setPreferredSize(new Dimension(Game.game.getWidth() / 7, Game.game.getHeight()));
 		side = true;
 	}
 
 	public void addCard(Card card) {
 		hand.get(card.suit).add(card);
-		if(side)
+		if (side)
 			panel.add(card.getImageButton(cardHeight, cardWidth, orientation));
 		else
 			panel.add(card.getImageButton(cardWidth, cardHeight, orientation));
@@ -64,7 +66,29 @@ public class Hand {
 	public void removeCard(Card card) {
 		hand.get(card.suit).remove(card);
 		panel.remove(card.button);
-		Game.game.repaint();
+		panel.repaint();
+		
+		CenterPanel cp = Game.centerPanel;
+		Image img = card.img;
+		BufferedImage buffImg = card.img;
+		if (orientation == Hand.Orientation.EAST) {
+			img = card.rotateImageByDegrees(buffImg, 90);
+		} else if (orientation == Hand.Orientation.WEST) {
+			img = card.rotateImageByDegrees(buffImg, 270);
+		} else if (orientation == Hand.Orientation.SOUTH) {
+			img = card.rotateImageByDegrees(buffImg, 180);
+		}
+
+		if (side)
+			img = img.getScaledInstance(cardHeight, cardWidth, Image.SCALE_SMOOTH);
+		else
+			img = img.getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
+		AffineTransform at = new AffineTransform();
+		at.translate(cp.getWidth() / 2 - img.getWidth(null) / 2, cp.getHeight() / 2 - img.getHeight(null) / 2);
+		cp.img[Trick.player] = img;
+		cp.at[Trick.player] = at;
+		cp.repaint();
+		//g2d.drawImage(img, at, null);
 	}
 
 	/**

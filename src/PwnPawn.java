@@ -35,6 +35,11 @@ public class PwnPawn extends Agent{
 
     @Override
     public Card getPlay(ArrayList<Card> history) {
+    	try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         Card.Suit lead = Game.game.currentRound.currentTrick.lead;
         Card.Suit trump = Game.game.currentRound.currentTrick.trump;
         if(!hand.getSuit(lead).isEmpty()) {

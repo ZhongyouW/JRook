@@ -4,6 +4,7 @@ import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
 
@@ -11,7 +12,8 @@ public class Game extends JFrame {
 	public Player[] players;
 	public static Game game;
 	public Round currentRound;
-	JPanel gamePanel, sidePanel;
+	public static JPanel gamePanel, sidePanel, leftHand, rightHand, topHand, bottomHand;
+	static CenterPanel centerPanel;
 
 	public Game(Player[] players) {
 		this.players = players;
@@ -56,29 +58,36 @@ public class Game extends JFrame {
 		gamePanel = new JPanel();
 		gamePanel.setBackground(Color.RED);
 		gamePanel.setLayout(new BorderLayout());
+
+		bottomHand = players[0].hand.panel;
 		gamePanel.add(players[0].hand.panel, BorderLayout.SOUTH);
-		this.add(gamePanel, BorderLayout.WEST);
 
 		// CPU #1 Left Panel
-		JPanel leftHand = new JPanel();
-		leftHand.add(players[1].hand.panel);
+		leftHand = players[1].hand.panel;
 		gamePanel.add(leftHand, BorderLayout.WEST);
 
 		// CPU #2 Top Panel
-		JPanel topHand = new JPanel();
-		topHand.add(players[2].hand.panel);
+		topHand = players[2].hand.panel;
 		gamePanel.add(topHand, BorderLayout.NORTH);
 
 		// CPU #3 Right Panel
-		JPanel rightHand = new JPanel();
-		rightHand.add(players[3].hand.panel);
+		rightHand = players[3].hand.panel;
 		gamePanel.add(rightHand, BorderLayout.EAST);
+
+		// Center
+		centerPanel = new CenterPanel();
+		// centerPanel.setLayout(new FlowLayout());
+		// centerPanel.add(new JButton("deez"));
+		//centerPanel.setBackground(Color.GREEN);
+		gamePanel.add(centerPanel, BorderLayout.CENTER);
 
 		// Right side of JFrame
 		sidePanel = new JPanel();
 		sidePanel.setLayout(new BorderLayout());
 		sidePanel.add(new JButton("stuff"), BorderLayout.SOUTH);
 		this.add(sidePanel, BorderLayout.CENTER);
+
+		this.add(gamePanel, BorderLayout.WEST);
 	}
 
 	private void startRound() {
@@ -99,5 +108,29 @@ public class Game extends JFrame {
 
 	public static void alert(String s) {
 		JOptionPane.showMessageDialog(null, s);
+	}
+}
+
+class CenterPanel extends JPanel {
+	public AffineTransform[] at = new AffineTransform[4];
+	public Image[] img = new Image[4];
+
+	@Override
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+		Graphics2D g2 = (Graphics2D) g;
+		// TODO Auto-generated method stub
+		for (int i = 0; i < at.length; i++) {
+			//System.out.print("SUS1");
+			//if (img[i] != null && at[i] != null) {
+				//System.out.print("SUS2");
+				g2.drawImage(img[i], at[i], null);
+			//}
+		}
+	}
+	
+	public void reset() {
+		at = new AffineTransform[4];
+		img = new Image[4];
 	}
 }

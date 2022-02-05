@@ -8,6 +8,7 @@ public class Trick {
     Player leader;
     Card.Suit lead = null;
     Card.Suit trump;
+    static int player;
     
     public Trick(Player[] players, Card.Suit trump, Player leader) {
         this.players = players;
@@ -24,6 +25,7 @@ public class Trick {
             System.out.println(players[i].name + "'s turn!");
             boolean valid = false;
             Card play;
+            player = i;
             do {
                 play = players[i].getPlay(history);
                 //Make sure leader is the first player to play a card
@@ -56,6 +58,7 @@ public class Trick {
 
         //self destruct?
         //Return winner so the next trick can start with the winner
+        Game.centerPanel.reset();
         return winner;
     }
 
