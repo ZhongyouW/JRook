@@ -13,14 +13,16 @@ abstract class Player {
      * Cards taken from tricks which will be tallied towards the points
      */
     Hand taken;
+    boolean human;
 
     public Player(String name, Hand hand) {
         this.name = name;
         this.hand = hand;
         this.taken = new Hand();
     }
-    public Player(String name) {
+    public Player(String name, boolean human) {
         this(name, new Hand());
+        this.human = human;
     }
 
     /**

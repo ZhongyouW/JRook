@@ -8,6 +8,7 @@ public class Trick {
     Player leader;
     Card.Suit lead = null;
     Card.Suit trump;
+    
     public Trick(Player[] players, Card.Suit trump, Player leader) {
         this.players = players;
         this.trump = trump;

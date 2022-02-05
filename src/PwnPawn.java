@@ -7,6 +7,7 @@ import java.util.ArrayList;
 public class PwnPawn extends Agent{
     double riskTolerance = 0;
     static int population = 0;
+    boolean human = false;
 
     public PwnPawn() {
         super("PwnPawn "+population);

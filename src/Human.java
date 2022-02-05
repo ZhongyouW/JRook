@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -6,9 +7,10 @@ public class Human extends Player{
     Scanner kb = new Scanner(System.in);
     final String regex = "^\\d+";
     final Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE);
+    boolean human = true;
 
     public Human(String name) {
-        super(name);
+        super(name, true);
     }
 
     public Human(String name, Hand hand) {

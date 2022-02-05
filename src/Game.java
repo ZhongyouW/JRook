@@ -11,18 +11,20 @@ public class Game extends JFrame {
 	public Player[] players;
 	public static Game game;
 	public Round currentRound;
+	JPanel gamePanel, sidePanel;
 
 	public Game(Player[] players) {
 		this.players = players;
 	}
 
 	public static void main(String[] args) throws IOException {
-		if(game == null) {
-			//Player have to go first, will fix later if we add multiplayer
-			Player[] players = {new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn()};
+		if (game == null) {
+			// Player have to go first, will fix later if we add multiplayer
+			Player[] players = { new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn() };
 			game = new Game(players);
 			game.initiate();
 			game.startRound();
+			game.setVisible(true);
 			game.currentRound.start();
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
@@ -31,9 +33,9 @@ public class Game extends JFrame {
 
 	public void initiate() throws IOException {
 		Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-
 		final int width = size.width;
 		final int height = size.height;
+
 		Color background = new Color(231, 231, 231);
 		Color zone = new Color(219, 220, 221);
 
@@ -43,18 +45,45 @@ public class Game extends JFrame {
 
 		this.setSize(size);
 		this.setExtendedState(JFrame.MAXIMIZED_BOTH);
+
 		this.setLayout(new BorderLayout());
 		this.setVisible(true);
-		//Set up Center Table
-		//JPanel
-		//Set up main player's hand
-		this.add(players[0].hand.panel, BorderLayout.SOUTH);
+		// Set up Center Table
+		// JPanel
+		// Set up main player's hand
+
+		// Left side of JFrame
+		gamePanel = new JPanel();
+		gamePanel.setBackground(Color.RED);
+		gamePanel.setLayout(new BorderLayout());
+		gamePanel.add(players[0].hand.panel, BorderLayout.SOUTH);
+		this.add(gamePanel, BorderLayout.WEST);
+
+		// CPU #1 Left Panel
+		JPanel leftHand = new JPanel();
+		leftHand.add(players[1].hand.panel);
+		gamePanel.add(leftHand, BorderLayout.WEST);
+
+		// CPU #2 Top Panel
+		JPanel topHand = new JPanel();
+		topHand.add(players[2].hand.panel);
+		gamePanel.add(topHand, BorderLayout.NORTH);
+
+		// CPU #3 Right Panel
+		JPanel rightHand = new JPanel();
+		rightHand.add(players[3].hand.panel);
+		gamePanel.add(rightHand, BorderLayout.EAST);
+
+		// Right side of JFrame
+		sidePanel = new JPanel();
+		sidePanel.setLayout(new BorderLayout());
+		sidePanel.add(new JButton("stuff"), BorderLayout.SOUTH);
+		this.add(sidePanel, BorderLayout.CENTER);
 	}
 
 	private void startRound() {
 		currentRound = new Round(players);
-		while(!currentRound.started)
-		{
+		while (!currentRound.started) {
 			try {
 				Thread.sleep(1000);
 			} catch (InterruptedException e) {

@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Agent extends Player {
     public Agent(String name) {
-        super(name);
+        super(name, false);
     }
 
     @Override
