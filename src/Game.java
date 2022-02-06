@@ -103,7 +103,18 @@ public class Game extends JFrame {
 
 	public static String getBid(int currentBid) {
 		return JOptionPane.showInputDialog(null,
-				String.format("Input your bid: Min = %d, Max = %d", currentBid + 1, 200));
+				String.format("Input your bid: Min = %d, Max = %d", currentBid + 5, 200));
+	}
+
+	public static Card.Suit getColor() {
+		Card.Suit[] options = Card.suits;
+		return (Card.Suit)JOptionPane.showInputDialog(null,
+				"Select the trump color",
+				"Trump Color Selection",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				Card.Suit.RED);
 	}
 
 	public static void alert(String s) {

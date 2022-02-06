@@ -61,6 +61,6 @@ public class Human extends Player{
 
     @Override
     public Card.Suit getPreferredColor() {
-        return null;
+        return Game.getColor();
     }
 }

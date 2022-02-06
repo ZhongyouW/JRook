@@ -20,6 +20,7 @@ public class Card {
 	public enum Suit {
 		RED, GREEN, BLUE, BLACK,
 	}
+	public static Suit[] suits = {Card.Suit.RED, Card.Suit.GREEN, Card.Suit.BLUE, Card.Suit.BLACK};
 
 	HashMap<Suit, Color> suitColor;
 

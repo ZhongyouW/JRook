@@ -33,6 +33,17 @@ public class PwnPawn extends Agent{
         return -1;
     }
 
+    private Card.Suit getBiggestSuit() {
+        Card.Suit biggest = Card.Suit.BLUE;
+        Card.Suit[] options = Card.suits;
+        for(Card.Suit suit : options) {
+            if(hand.getSuit(suit).size() > hand.getSuit(biggest).size()) {
+                biggest = suit;
+            }
+        }
+        return biggest;
+    }
+
     @Override
     public Card getPlay(ArrayList<Card> history) {
     	try {
@@ -40,23 +51,18 @@ public class PwnPawn extends Agent{
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
         Card.Suit lead = Game.game.currentRound.currentTrick.lead;
         Card.Suit trump = Game.game.currentRound.currentTrick.trump;
-        if(!hand.getSuit(lead).isEmpty()) {
-            return hand.getSuit(lead).remove(hand.getSuit(lead).size()-1);
-        }
 
-        if(!hand.getSuit(trump).isEmpty()) {
-            return hand.getSuit(trump).remove(hand.getSuit(trump).size()-1);
+        if(history.isEmpty()) {
+            return getCardOfSuit(getBiggestSuit(), ValueType.HIGHEST);
+        } else if(!hand.getSuit(lead).isEmpty()) {
+            return getCardOfSuit(lead, ValueType.RANDOM);
+        } else if(!hand.getSuit(trump).isEmpty()) {
+            return getCardOfSuit(trump, ValueType.RANDOM);
+        } else {
+            return getCardOfSuit(getBiggestSuit(), ValueType.LOWEST);
         }
-
-        if(!hand.getSuit(Card.Suit.BLUE).isEmpty()) {
-            return hand.getSuit(Card.Suit.BLUE).remove(hand.getSuit(Card.Suit.BLUE).size()-1);
-        } else if(!hand.getSuit(Card.Suit.BLACK).isEmpty()) {
-            return hand.getSuit(Card.Suit.BLACK).remove(hand.getSuit(Card.Suit.BLACK).size()-1);
-        } else if(!hand.getSuit(Card.Suit.RED).isEmpty()) {
-            return hand.getSuit(Card.Suit.RED).remove(hand.getSuit(Card.Suit.RED).size()-1);
-        }
-        return hand.getSuit(Card.Suit.GREEN).remove(hand.getSuit(Card.Suit.GREEN).size()-1);
     }
 }

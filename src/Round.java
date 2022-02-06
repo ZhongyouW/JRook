@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.util.*;
 
 /**
@@ -26,15 +27,17 @@ public class Round {
 	}
 
 	public void start() {
-		Player topBidder = startBid();
-		trump = topBidder.getPreferredColor();
+		Player winner= startBid();
+		trump = winner.getPreferredColor();
+		JOptionPane.showMessageDialog(null, "The trump color is " + trump);
 		trumpCard.suit = trump;
 		// Give nest to topBidder and let them throw out 5 cards.
 		// Play tricks until the players have no cards
 		for (int i = 0; i < 14; i++) {
-			Trick t = new Trick(players, trump, topBidder);
+			Trick t = new Trick(players, trump, winner);
 			currentTrick = t;
-			System.out.println(t.play().name + " wins this trick!");
+			winner = t.play();
+			System.out.println(winner.name + " wins this trick!");
 		}
 	}
 

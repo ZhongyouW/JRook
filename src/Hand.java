@@ -50,7 +50,7 @@ public class Hand {
 
 	public void sidePanel() {
 		panel.setLayout(new FlowLayout(FlowLayout.CENTER, 0, (int) (-cardHeight / 3)));
-		panel.setPreferredSize(new Dimension(Game.game.getWidth() / 7, Game.game.getHeight()));
+		panel.setPreferredSize(new Dimension(height, Game.game.getHeight()));
 		side = true;
 	}
 
