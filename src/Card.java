@@ -22,7 +22,7 @@ public class Card {
 	}
 	public static Suit[] suits = {Card.Suit.RED, Card.Suit.GREEN, Card.Suit.BLUE, Card.Suit.BLACK};
 
-	HashMap<Suit, Color> suitColor;
+	static HashMap<Suit, Color> suitColor;
 
 	boolean rook, hovered;
 	Player owner;
@@ -89,7 +89,6 @@ public class Card {
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 		// Get Image file
 		try {
-			System.out.println(owner.human);
 			File file = null;
 			File file2 = null;
 			if (!owner.human) {
@@ -98,11 +97,7 @@ public class Card {
 			} else {
 				file = new File("resource\\card\\" + value + ".png");
 			}
-			if (!file.exists()) {
-				System.out.println(value + ".png image can't be found!");
-				file = new File("resource\\card\\Crow.png");
-			}
-			if(file2 != null && file2.exists()) {
+			if(file2 != null) {
 				BufferedImage x = ImageIO.read(file2);
 				this.img = recolor(x, new Color(218, 62, 40), suitColor.get(suit));
 			}

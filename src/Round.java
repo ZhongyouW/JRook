@@ -30,6 +30,7 @@ public class Round {
 		Player winner= startBid();
 		trump = winner.getPreferredColor();
 		JOptionPane.showMessageDialog(null, "The trump color is " + trump);
+		Game.trump.setForeground(Card.suitColor.get(trump));
 		trumpCard.suit = trump;
 		// Give nest to topBidder and let them throw out 5 cards.
 		// Play tricks until the players have no cards

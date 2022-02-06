@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class Game extends JFrame {
 	public Player[] players;
@@ -14,6 +15,7 @@ public class Game extends JFrame {
 	public Round currentRound;
 	public static JPanel gamePanel, sidePanel, leftHand, rightHand, topHand, bottomHand;
 	static CenterPanel centerPanel;
+	static JLabel trump, plays, wins;
 
 	public Game(Player[] players) {
 		this.players = players;
@@ -78,16 +80,32 @@ public class Game extends JFrame {
 		centerPanel = new CenterPanel();
 		// centerPanel.setLayout(new FlowLayout());
 		// centerPanel.add(new JButton("deez"));
-		//centerPanel.setBackground(Color.GREEN);
+		// centerPanel.setBackground(Color.GREEN);
 		gamePanel.add(centerPanel, BorderLayout.CENTER);
 
 		// Right side of JFrame
 		sidePanel = new JPanel();
+		sidePanel.setBackground(Color.WHITE);
 		sidePanel.setLayout(new BorderLayout());
 		sidePanel.add(new JButton("stuff"), BorderLayout.SOUTH);
 		this.add(sidePanel, BorderLayout.CENTER);
 
 		this.add(gamePanel, BorderLayout.WEST);
+
+		trump = new JLabel("TRUMP", SwingConstants.CENTER);
+		trump.setForeground(Color.white);
+		trump.setFont(new Font("Arial", Font.BOLD, width / 50));
+		sidePanel.add(trump, BorderLayout.CENTER);
+
+		plays = new JLabel("&emsp;Player 1's Turn", SwingConstants.LEFT);
+		plays.setForeground(Color.black);
+		plays.setFont(new Font("Arial", Font.BOLD, width / 90));
+		sidePanel.add(plays, BorderLayout.NORTH);
+
+		wins = new JLabel("<html><body>&emsp;Team 1: 0<br>&emsp;Team 2: 0<br/><br/></body></html>", SwingConstants.LEFT);
+		wins.setForeground(Color.black);
+		wins.setFont(new Font("Arial", Font.BOLD, width / 90));
+		sidePanel.add(wins, BorderLayout.SOUTH);
 	}
 
 	private void startRound() {
@@ -108,13 +126,8 @@ public class Game extends JFrame {
 
 	public static Card.Suit getColor() {
 		Card.Suit[] options = Card.suits;
-		return (Card.Suit)JOptionPane.showInputDialog(null,
-				"Select the trump color",
-				"Trump Color Selection",
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				Card.Suit.RED);
+		return (Card.Suit) JOptionPane.showInputDialog(null, "Select the trump color", "Trump Color Selection",
+				JOptionPane.QUESTION_MESSAGE, null, options, Card.Suit.RED);
 	}
 
 	public static void alert(String s) {
@@ -123,25 +136,21 @@ public class Game extends JFrame {
 }
 
 class CenterPanel extends JPanel {
-	public AffineTransform[] at = new AffineTransform[4];
-	public Image[] img = new Image[4];
+	public ArrayList<AffineTransform> at = new ArrayList<>();
+	public ArrayList<Image> img = new ArrayList<>();
 
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		Graphics2D g2 = (Graphics2D) g;
 		// TODO Auto-generated method stub
-		for (int i = 0; i < at.length; i++) {
-			//System.out.print("SUS1");
-			//if (img[i] != null && at[i] != null) {
-				//System.out.print("SUS2");
-				g2.drawImage(img[i], at[i], null);
-			//}
+		for (int i = 0; i < at.size(); i++) {
+			g2.drawImage(img.get(i), at.get(i), null);
 		}
 	}
-	
+
 	public void reset() {
-		at = new AffineTransform[4];
-		img = new Image[4];
+		at = new ArrayList<>();
+		img = new ArrayList<>();
 	}
 }

@@ -85,8 +85,8 @@ public class Hand {
 			img = img.getScaledInstance(cardWidth, cardHeight, Image.SCALE_SMOOTH);
 		AffineTransform at = new AffineTransform();
 		at.translate(cp.getWidth() / 2 - img.getWidth(null) / 2, cp.getHeight() / 2 - img.getHeight(null) / 2);
-		cp.img[Trick.player] = img;
-		cp.at[Trick.player] = at;
+		cp.img.add(img);
+		cp.at.add(at);
 		cp.repaint();
 		//g2d.drawImage(img, at, null);
 	}
