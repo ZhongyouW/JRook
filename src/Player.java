@@ -7,6 +7,7 @@ import java.util.ArrayList;
 abstract class Player {
     String name;
     Hand hand;
+    int points;
     Boolean selected = false;
     Card selection;
     /**

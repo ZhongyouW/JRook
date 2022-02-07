@@ -122,7 +122,7 @@ public class Hand {
 				case 14:
 					value += 10;
 					break;
-				case 20:
+				case 0:
 					value += 20;
 					break;
 				}

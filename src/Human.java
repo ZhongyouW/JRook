@@ -26,13 +26,11 @@ public class Human extends Player{
                 e.printStackTrace();
             }
         }
-        System.out.println(selection);
         return selection;
     }
 
     @Override
     public void setPlay(Card card) {
-        System.out.println(name + " has set play to " + card);
         selection = card;
         selected = true;
     }

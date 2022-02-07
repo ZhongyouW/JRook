@@ -12,6 +12,7 @@ public class Round {
 	Deck deck;
 	Card.Suit trump;
 	Card trumpCard;
+	int bid;
 	public Trick currentTrick;
 	public Boolean started = false;
 
@@ -27,11 +28,26 @@ public class Round {
 	}
 
 	public void start() {
-		Player winner= startBid();
+		Player topBidder= startBid();
+		Player winner = topBidder;
+		//Set teams for point distribution
+		Team offense;
+		Team defense;
+		if(Game.game.teams[0].team.contains(winner)) {
+			offense = Game.game.teams[0];
+			defense = Game.game.teams[1];
+		} else {
+			offense = Game.game.teams[1];
+			defense = Game.game.teams[0];
+		}
+
 		trump = winner.getPreferredColor();
 		JOptionPane.showMessageDialog(null, "The trump color is " + trump);
 		Game.trump.setForeground(Card.suitColor.get(trump));
 		trumpCard.suit = trump;
+
+		trumpCard.owner.hand.getSuit(Card.Suit.BLUE).remove(trumpCard);
+		trumpCard.owner.hand.getSuit(trump).add(trumpCard);
 		// Give nest to topBidder and let them throw out 5 cards.
 		// Play tricks until the players have no cards
 		for (int i = 0; i < 14; i++) {
@@ -40,13 +56,30 @@ public class Round {
 			winner = t.play();
 			System.out.println(winner.name + " wins this trick!");
 		}
+		//Count points and add it to the team's point basket
+		int points = 0;
+		for(Player player : offense.team) {
+			points += player.getPoints();
+		}
+		System.out.println("Offense team got " + points + " points");
+		//Add bid according to if bid was reached
+		offense.points += (points >= bid)? bid: -bid;
+		//Add points to losing team
+		for(Player player : defense.team) {
+			defense.points += player.getPoints();
+		}
+		//Reset
+		for(Player player : players) {
+			System.out.printf("%s have %d points\n", player.name, player.points);
+			player.taken = new Hand();
+		}
 	}
 
 	Player startBid() {
 		Player topBidder = players[0];
 
 		ArrayList<Player> biddingPlayers = new ArrayList<Player>(Arrays.asList(players));
-		int bid = 70;
+		bid = 70;
 		while (biddingPlayers.size() > 1) {
 			for (int i = 0; i < biddingPlayers.size(); i++) {
 				int myBid;

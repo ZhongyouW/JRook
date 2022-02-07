@@ -15,24 +15,44 @@ public class Game extends JFrame {
 	public Round currentRound;
 	public static JPanel gamePanel, sidePanel, leftHand, rightHand, topHand, bottomHand;
 	static CenterPanel centerPanel;
+	public Team[] teams;
 	static JLabel trump, plays, wins;
 
 	public Game(Player[] players) {
 		this.players = players;
+		teams = new Team[]{new Team(), new Team()};
+		teams[0].add(players[0]);
+		teams[0].add(players[2]);
+		teams[1].add(players[1]);
+		teams[1].add(players[3]);
 	}
 
 	public static void main(String[] args) throws IOException {
 		if (game == null) {
 			// Player have to go first, will fix later if we add multiplayer
 			Player[] players = { new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn() };
+
 			game = new Game(players);
+
 			game.initiate();
-			game.startRound();
-			game.setVisible(true);
-			game.currentRound.start();
+			while((game.getWinner() == null)) {
+				game.startRound();
+				game.setVisible(true);
+				game.currentRound.start();
+			}
+			JOptionPane.showMessageDialog(null, game.getWinner().name + "won the game!");
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
 		}
+	}
+
+	public Player getWinner() {
+		for(Player player : players) {
+			if(player.points >= 500) {
+				return player;
+			}
+		}
+		return null;
 	}
 
 	public void initiate() throws IOException {
@@ -126,8 +146,13 @@ public class Game extends JFrame {
 
 	public static Card.Suit getColor() {
 		Card.Suit[] options = Card.suits;
-		return (Card.Suit) JOptionPane.showInputDialog(null, "Select the trump color", "Trump Color Selection",
-				JOptionPane.QUESTION_MESSAGE, null, options, Card.Suit.RED);
+		return (Card.Suit)JOptionPane.showInputDialog(null,
+				"Select the trump color",
+				"Trump Color Selection",
+				JOptionPane.QUESTION_MESSAGE,
+				null,
+				options,
+				Card.Suit.RED);
 	}
 
 	public static void alert(String s) {
