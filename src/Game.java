@@ -1,11 +1,9 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.EmptyBorder;
 
 import java.awt.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 import java.awt.geom.AffineTransform;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -16,11 +14,12 @@ public class Game extends JFrame {
 	public static JPanel gamePanel, sidePanel, leftHand, rightHand, topHand, bottomHand;
 	static CenterPanel centerPanel;
 	public Team[] teams;
-	static JLabel trump, plays, wins;
+	static JLabel trump, wins;
+	static Commentary plays;
 
 	public Game(Player[] players) {
 		this.players = players;
-		teams = new Team[]{new Team(), new Team()};
+		teams = new Team[] { new Team(), new Team() };
 		teams[0].add(players[0]);
 		teams[0].add(players[2]);
 		teams[1].add(players[1]);
@@ -35,22 +34,22 @@ public class Game extends JFrame {
 			game = new Game(players);
 
 			game.initiate();
-			while((game.getWinner() == null)) {
+			while ((game.getWinner() == null)) {
 				game.startRound();
 				game.setVisible(true);
 				game.currentRound.start();
 			}
-			JOptionPane.showMessageDialog(null, game.getWinner() + " won the game!");
+			JOptionPane.showMessageDialog(null, game.getWinner().name + "won the game!");
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
 		}
 	}
 
-	public Team getWinner() {
-		if((teams[0].points > teams[1].points) && teams[0].points >= 500) {
-			return teams[0];
-		} else if((teams[1].points > teams[0].points) && teams[1].points >= 500) {
-			return teams[1];
+	public Player getWinner() {
+		for (Player player : players) {
+			if (player.points >= 500) {
+				return player;
+			}
 		}
 		return null;
 	}
@@ -61,7 +60,6 @@ public class Game extends JFrame {
 		final int height = size.height;
 
 		Color background = new Color(231, 231, 231);
-		Color zone = new Color(219, 220, 221);
 
 		this.setBackground(background);
 		this.setIconImage(null);
@@ -117,12 +115,12 @@ public class Game extends JFrame {
 		trump.setFont(new Font("Arial", Font.BOLD, width / 50));
 		sidePanel.add(trump, BorderLayout.CENTER);
 
-		plays = new JLabel("&emsp;Player 1's Turn", SwingConstants.LEFT);
-		plays.setForeground(Color.black);
-		plays.setFont(new Font("Arial", Font.BOLD, width / 90));
+		plays = new Commentary(width);
+		plays.setPreferredSize(new Dimension(width, height / 3));
 		sidePanel.add(plays, BorderLayout.NORTH);
 
-		wins = new JLabel("<html><body>&emsp;Team 1: 0<br>&emsp;Team 2: 0<br/><br/></body></html>", SwingConstants.LEFT);
+		wins = new JLabel("<html><body>&emsp;Team 1: 0<br>&emsp;Team 2: 0<br/><br/></body></html>",
+				SwingConstants.LEFT);
 		wins.setForeground(Color.black);
 		wins.setFont(new Font("Arial", Font.BOLD, width / 90));
 		sidePanel.add(wins, BorderLayout.SOUTH);
@@ -141,18 +139,13 @@ public class Game extends JFrame {
 
 	public static String getBid(int currentBid) {
 		return JOptionPane.showInputDialog(null,
-				String.format("Your turn to bid! \nCurrent bid: %d \nMaximum bid = %d", currentBid, 200));
+				String.format("Input your bid: Min = %d, Max = %d", currentBid + 5, 200));
 	}
 
 	public static Card.Suit getColor() {
 		Card.Suit[] options = Card.suits;
-		return (Card.Suit)JOptionPane.showInputDialog(null,
-				"Select the trump color",
-				"Trump Color Selection",
-				JOptionPane.QUESTION_MESSAGE,
-				null,
-				options,
-				Card.Suit.RED);
+		return (Card.Suit) JOptionPane.showInputDialog(null, "Select the trump color", "Trump Color Selection",
+				JOptionPane.QUESTION_MESSAGE, null, options, Card.Suit.RED);
 	}
 
 	public static void alert(String s) {
@@ -177,5 +170,39 @@ class CenterPanel extends JPanel {
 	public void reset() {
 		at = new ArrayList<>();
 		img = new ArrayList<>();
+		repaint();
+	}
+}
+
+class Commentary extends JPanel {
+	int width;
+	ArrayList<JLabel> list = new ArrayList<>();
+
+	public Commentary(int width) {
+		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+		this.setAlignmentY(BOTTOM_ALIGNMENT);
+		this.width = width;
+		this.setBackground(new Color(200, 200, 200));
+	}
+
+	@Override
+	public void paintComponent(Graphics g) {
+		this.removeAll();
+		for(JLabel x:list) {
+			this.add(x);
+		}
+		super.paintComponent(g);
+	}
+
+	public void add(String s) {
+		if(list.size() > 16) {
+			list.remove(0);
+		}
+		s = "  " + s;
+		JLabel t = new JLabel(s, SwingConstants.LEFT);
+		t.setFont(new Font("Arial", Font.BOLD, width / 110));
+		list.add(t);
+		this.repaint();
+		this.revalidate();
 	}
 }

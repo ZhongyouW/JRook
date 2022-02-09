@@ -44,27 +44,12 @@ public class PwnPawn extends Agent{
         return biggest;
     }
 
-    private Card.Suit getSmallestSuit() {
-        Card.Suit smallest = Card.Suit.BLUE;
-        Card.Suit[] options = Card.suits;
-        for(Card.Suit suit : options) {
-            if(hand.getSuit(suit).size() < hand.getSuit(smallest).size()) {
-                smallest = suit;
-            }
-        }
-        return smallest;
-    }
-
     @Override
     public Card getPlay(ArrayList<Card> history) {
     	try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-        //This means trick haven't started and PwnPawn needs to discard a card
-        if(Game.game.currentRound.currentTrick == null) {
-            return getCardOfSuit(getSmallestSuit(), ValueType.RANDOM);
         }
 
         Card.Suit lead = Game.game.currentRound.currentTrick.lead;

@@ -37,10 +37,10 @@ public class Card {
 		this.value = value;
 		this.suit = suit;
 		suitColor = new HashMap<>();
-		suitColor.put(suit.RED, new Color(231, 70, 52));
-		suitColor.put(suit.GREEN, new Color(92, 171, 52));
-		suitColor.put(suit.BLUE, new Color(53, 107, 171));
-		suitColor.put(suit.BLACK, new Color(20, 20, 20));
+		suitColor.put(Suit.RED, new Color(231, 70, 52));
+		suitColor.put(Suit.GREEN, new Color(92, 171, 52));
+		suitColor.put(Suit.BLUE, new Color(53, 107, 171));
+		suitColor.put(Suit.BLACK, new Color(20, 20, 20));
 	}
 
 	public Card(Suit suit, int value, Player owner) {
@@ -148,6 +148,7 @@ public class Card {
 					if (hovered) {
 						button.setLocation(button.getX() + button.getWidth() / 3,
 								(int) (finalY + button.getSize().getHeight() / 6));
+						Game.game.revalidate();
 						Game.game.repaint();
 						hovered = false;
 					}

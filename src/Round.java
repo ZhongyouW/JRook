@@ -1,5 +1,3 @@
-import org.hamcrest.core.Is;
-
 import javax.swing.*;
 import java.util.*;
 
@@ -20,7 +18,7 @@ public class Round {
 
 	public Round(Player[] players) {
 		this.players = players;
-		deck = new Deck(2, 15);
+		deck = new Deck(1, 14);
 		deck.shuffle();
 		trumpCard = new Card(Card.Suit.BLUE, 0, true);
 		deck.addCard(trumpCard);
@@ -30,12 +28,12 @@ public class Round {
 	}
 
 	public void start() {
-		Player topBidder= startBid();
+		Player topBidder = startBid();
 		Player winner = topBidder;
-		//Set teams for point distribution
+		// Set teams for point distribution
 		Team offense;
 		Team defense;
-		if(Game.game.teams[0].team.contains(winner)) {
+		if (Game.game.teams[0].team.contains(winner)) {
 			offense = Game.game.teams[0];
 			defense = Game.game.teams[1];
 		} else {
@@ -43,20 +41,13 @@ public class Round {
 			defense = Game.game.teams[0];
 		}
 
-		Card last = deck.draw();
-		last.owner = winner;
-		winner.hand.addCard(last);
-		//Prompt user to discard a card
-		if(winner == players[0]) {
-			JOptionPane.showMessageDialog(null, "Please discard a card");
-		}
-		winner.hand.removeCard(winner.getPlay(new ArrayList<Card>()));
-
 		trump = winner.getPreferredColor();
-		JOptionPane.showMessageDialog(null, "The trump color is " + trump);
+		if (trump == null)
+			trump = Card.Suit.BLUE;
+		Game.plays.add("The trump color is " + trump);
 		Game.trump.setForeground(Card.suitColor.get(trump));
 		trumpCard.suit = trump;
-		//Relocate the trump card from the blue suit to the trump suit
+
 		trumpCard.owner.hand.getSuit(Card.Suit.BLUE).remove(trumpCard);
 		trumpCard.owner.hand.getSuit(trump).add(trumpCard);
 		// Give nest to topBidder and let them throw out 5 cards.
@@ -65,41 +56,29 @@ public class Round {
 			Trick t = new Trick(players, trump, winner);
 			currentTrick = t;
 			winner = t.play();
-
-			if(offense.team.contains(winner)) {
-				offense.wins++;
-			} else {
-				defense.wins++;
-			}
 			System.out.println(winner.name + " wins this trick!");
 		}
-		//Add bonus points
-		Card bonus = new Card(Card.Suit.BLACK,0);
-		if(offense.wins < defense.wins){
-			bonus.owner = defense.team.get(0);
-			defense.team.get(0).taken.addCard(bonus);
-		} else if (offense.wins > defense.wins) {
-			bonus.owner = offense.team.get(0);
-			offense.team.get(0).taken.addCard(bonus);
-		}
-		//Count points and add it to the team's point basket
+		// Count points and add it to the team's point basket
 		int points = 0;
-		for(Player player : offense.team) {
+		for (Player player : offense.team) {
 			points += player.getPoints();
 		}
 		System.out.println("Offense team got " + points + " points");
-		//Add bid according to if bid was reached
-		offense.points += (points >= bid)? bid: -bid;
-		//Add points to losing team
-		for(Player player : defense.team) {
+		// Add bid according to if bid was reached
+		offense.points += (points >= bid) ? bid : -bid;
+		// Add points to losing team
+		for (Player player : defense.team) {
 			defense.points += player.getPoints();
 		}
-		//Reset
-		for(Player player : players) {
+		// Reset
+		for (Player player : players) {
+			System.out.printf("%s have %d points\n", player.name, player.points);
 			player.taken = new Hand();
 		}
-		System.out.printf("team 1 have %d points\n", Game.game.teams[0].points);
-		System.out.printf("team 2 have %d points\n", Game.game.teams[1].points);
+		
+		String s = "<html><body>&emsp;Team 1: %d<br>&emsp;Team 2: %d<br/><br/></body></html>";
+		Game.wins.setText(String.format(s, Game.game.teams[0].points, Game.game.teams[1].points));
+		Game.wins.repaint();
 	}
 
 	Player startBid() {
@@ -116,16 +95,26 @@ public class Round {
 					myBid = player.getBid(bid);
 				} while (myBid <= bid && myBid != -1); // Repeat until the game gets valid input
 
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e) {
+
+				}
+
 				if (myBid > bid) {
 					bid = myBid;
 					topBidder = player;
+					Game.plays.add(String.format("%s bid %d", player.name, bid));
 					System.out.printf("%s bid %d\n", player.name, bid);
 				} else {
 					biddingPlayers.remove(i--);
+					Game.plays.add(String.format("%s pass", player.name));
 					System.out.printf("%s pass\n", player.name);
 				}
+				Game.plays.revalidate();
 			}
 		}
+		Game.plays.repaint();
 		return topBidder;
 	}
 

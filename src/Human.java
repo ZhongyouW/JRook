@@ -46,10 +46,10 @@ public class Human extends Player{
             Matcher matcher = pattern.matcher(bid);
             if (matcher.find()) {
                 x = Integer.parseInt(matcher.group(0));
-                if(x > currentBid+4 && x <= 200)
+                if(x > currentBid && x <= 200)
                     break;
                 else
-                    Game.alert("Your bid must be between " + (currentBid+5) + " and 200.");
+                    Game.alert("Your bid must be between " + (currentBid+1) + " and 200.");
             } else {
                 Game.alert("Your input was not a valid number, press cancel if you want to pass!");
             }

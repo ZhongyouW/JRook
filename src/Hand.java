@@ -4,7 +4,6 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 /**
@@ -66,6 +65,7 @@ public class Hand {
 	public void removeCard(Card card) {
 		hand.get(card.suit).remove(card);
 		panel.remove(card.button);
+		panel.revalidate();
 		panel.repaint();
 		
 		CenterPanel cp = Game.centerPanel;
@@ -112,7 +112,7 @@ public class Hand {
 		for (ArrayList<Card> suit : hand.values()) {
 			for (Card card : suit) {
 				switch (card.value) {
-				case 15:
+				case 1:
 					value += 15;
 					break;
 				case 5:
