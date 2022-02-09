@@ -46,7 +46,7 @@ public class Trick {
 				// Check if the input is valid (ie. its following the lead card, or player does
 				// not have lead card)
 				if (lead == play.suit || players[player].hand.getSuit(lead).isEmpty()
-						|| play.suit == trump && trumpBroken) {
+						|| play.suit == trump && trumpBroken || play.value == 0) {
 					if (play.suit == trump) {
 						trumpBroken = true;
 					}

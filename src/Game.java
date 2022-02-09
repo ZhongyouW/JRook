@@ -30,26 +30,30 @@ public class Game extends JFrame {
 		if (game == null) {
 			// Player have to go first, will fix later if we add multiplayer
 			Player[] players = { new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn() };
-
+			
 			game = new Game(players);
 
 			game.initiate();
+			
+			String name = JOptionPane.showInputDialog("What is your name?");
+			players[0].name = name;
+			
 			while ((game.getWinner() == null)) {
 				game.startRound();
 				game.setVisible(true);
 				game.currentRound.start();
 			}
-			JOptionPane.showMessageDialog(null, game.getWinner().name + "won the game!");
+			JOptionPane.showMessageDialog(null, game.getWinner() + " won the game!");
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
 		}
 	}
 
-	public Player getWinner() {
-		for (Player player : players) {
-			if (player.points >= 500) {
-				return player;
-			}
+	public Team getWinner() {
+		if((teams[0].points > teams[1].points) && teams[0].points >= 500) {
+			return teams[0];
+		} else if((teams[1].points > teams[0].points) && teams[1].points >= 500) {
+			return teams[1];
 		}
 		return null;
 	}
@@ -113,15 +117,17 @@ public class Game extends JFrame {
 		trump = new JLabel("TRUMP", SwingConstants.CENTER);
 		trump.setForeground(Color.white);
 		trump.setFont(new Font("Arial", Font.BOLD, width / 50));
-		sidePanel.add(trump, BorderLayout.CENTER);
+		trump.setPreferredSize(new Dimension(width, height / 8));
+		sidePanel.add(trump, BorderLayout.NORTH);
 
 		plays = new Commentary(width);
-		plays.setPreferredSize(new Dimension(width, height / 3));
-		sidePanel.add(plays, BorderLayout.NORTH);
+		plays.setPreferredSize(new Dimension(width, height * 4 / 8));
+		sidePanel.add(plays, BorderLayout.CENTER);
 
 		wins = new JLabel("<html><body>&emsp;Team 1: 0<br>&emsp;Team 2: 0<br/><br/></body></html>",
 				SwingConstants.LEFT);
 		wins.setForeground(Color.black);
+		wins.setPreferredSize(new Dimension(width, height*3 / 8));
 		wins.setFont(new Font("Arial", Font.BOLD, width / 90));
 		sidePanel.add(wins, BorderLayout.SOUTH);
 	}
@@ -139,7 +145,7 @@ public class Game extends JFrame {
 
 	public static String getBid(int currentBid) {
 		return JOptionPane.showInputDialog(null,
-				String.format("Input your bid: Min = %d, Max = %d", currentBid + 5, 200));
+				String.format("Your turn to bid! \nCurrent bid: %d \nMaximum bid = %d", currentBid, 200));
 	}
 
 	public static Card.Suit getColor() {

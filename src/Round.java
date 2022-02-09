@@ -1,5 +1,6 @@
-import javax.swing.*;
 import java.util.*;
+
+import javax.swing.JOptionPane;
 
 /**
  * Represents a round of rook where players play tricks until the deck is empty
@@ -18,7 +19,7 @@ public class Round {
 
 	public Round(Player[] players) {
 		this.players = players;
-		deck = new Deck(1, 14);
+		deck = new Deck(2, 15);
 		deck.shuffle();
 		trumpCard = new Card(Card.Suit.BLUE, 0, true);
 		deck.addCard(trumpCard);
@@ -41,6 +42,15 @@ public class Round {
 			defense = Game.game.teams[0];
 		}
 
+		Card last = deck.draw();
+		last.owner = winner;
+		winner.hand.addCard(last);
+		// Prompt user to discard a card
+		if (winner == players[0]) {
+			JOptionPane.showMessageDialog(null, "Please discard a card");
+		}
+		winner.hand.removeCard(winner.getPlay(new ArrayList<Card>()));
+
 		trump = winner.getPreferredColor();
 		if (trump == null)
 			trump = Card.Suit.BLUE;
@@ -56,8 +66,24 @@ public class Round {
 			Trick t = new Trick(players, trump, winner);
 			currentTrick = t;
 			winner = t.play();
+			if (offense.team.contains(winner)) {
+				offense.wins++;
+			} else {
+				defense.wins++;
+			}
 			System.out.println(winner.name + " wins this trick!");
 		}
+
+		// Add bonus points
+		Card bonus = new Card(Card.Suit.BLACK, 0);
+		if (offense.wins < defense.wins) {
+			bonus.owner = defense.team.get(0);
+			defense.team.get(0).taken.addCard(bonus);
+		} else if (offense.wins > defense.wins) {
+			bonus.owner = offense.team.get(0);
+			offense.team.get(0).taken.addCard(bonus);
+		}
+
 		// Count points and add it to the team's point basket
 		int points = 0;
 		for (Player player : offense.team) {
@@ -72,10 +98,11 @@ public class Round {
 		}
 		// Reset
 		for (Player player : players) {
-			System.out.printf("%s have %d points\n", player.name, player.points);
 			player.taken = new Hand();
 		}
-		
+		System.out.printf("team 1 have %d points\n", Game.game.teams[0].points);
+		System.out.printf("team 2 have %d points\n", Game.game.teams[1].points);
+
 		String s = "<html><body>&emsp;Team 1: %d<br>&emsp;Team 2: %d<br/><br/></body></html>";
 		Game.wins.setText(String.format(s, Game.game.teams[0].points, Game.game.teams[1].points));
 		Game.wins.repaint();

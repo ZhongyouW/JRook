@@ -65,7 +65,7 @@ public class Hand {
 	public void removeCard(Card card) {
 		hand.get(card.suit).remove(card);
 		panel.remove(card.button);
-		panel.revalidate();
+		
 		panel.repaint();
 		
 		CenterPanel cp = Game.centerPanel;
@@ -112,7 +112,7 @@ public class Hand {
 		for (ArrayList<Card> suit : hand.values()) {
 			for (Card card : suit) {
 				switch (card.value) {
-				case 1:
+				case 15:
 					value += 15;
 					break;
 				case 5:

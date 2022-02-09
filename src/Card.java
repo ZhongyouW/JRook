@@ -123,6 +123,7 @@ public class Card {
 		button.setBackground(new Color(0, 0, 0, 1));
 		button.setContentAreaFilled(false);
 		button.setBorderPainted(false);
+		button.setBorder(null);
 		initialY = button.getY();
 		finalY = (int) (initialY - button.getSize().getHeight() / 4);
 		// On Click
