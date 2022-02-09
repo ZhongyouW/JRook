@@ -112,7 +112,7 @@ public class Hand {
 		for (ArrayList<Card> suit : hand.values()) {
 			for (Card card : suit) {
 				switch (card.value) {
-				case 1:
+				case 15:
 					value += 15;
 					break;
 				case 5:

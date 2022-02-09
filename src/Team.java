@@ -15,4 +15,9 @@ public class Team {
     public void add(Player player) {
         team.add(player);
     }
+
+    public String toString() {
+        String name = team.get(0).name + " and " + team.get(1).name;
+        return name;
+    }
 }

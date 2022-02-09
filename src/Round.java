@@ -1,3 +1,5 @@
+import org.hamcrest.core.Is;
+
 import javax.swing.*;
 import java.util.*;
 
@@ -18,7 +20,7 @@ public class Round {
 
 	public Round(Player[] players) {
 		this.players = players;
-		deck = new Deck(1, 14);
+		deck = new Deck(2, 15);
 		deck.shuffle();
 		trumpCard = new Card(Card.Suit.BLUE, 0, true);
 		deck.addCard(trumpCard);
@@ -41,11 +43,20 @@ public class Round {
 			defense = Game.game.teams[0];
 		}
 
+		Card last = deck.draw();
+		last.owner = winner;
+		winner.hand.addCard(last);
+		//Prompt user to discard a card
+		if(winner == players[0]) {
+			JOptionPane.showMessageDialog(null, "Please discard a card");
+		}
+		winner.hand.removeCard(winner.getPlay(new ArrayList<Card>()));
+
 		trump = winner.getPreferredColor();
 		JOptionPane.showMessageDialog(null, "The trump color is " + trump);
 		Game.trump.setForeground(Card.suitColor.get(trump));
 		trumpCard.suit = trump;
-
+		//Relocate the trump card from the blue suit to the trump suit
 		trumpCard.owner.hand.getSuit(Card.Suit.BLUE).remove(trumpCard);
 		trumpCard.owner.hand.getSuit(trump).add(trumpCard);
 		// Give nest to topBidder and let them throw out 5 cards.
@@ -54,7 +65,22 @@ public class Round {
 			Trick t = new Trick(players, trump, winner);
 			currentTrick = t;
 			winner = t.play();
+
+			if(offense.team.contains(winner)) {
+				offense.wins++;
+			} else {
+				defense.wins++;
+			}
 			System.out.println(winner.name + " wins this trick!");
+		}
+		//Add bonus points
+		Card bonus = new Card(Card.Suit.BLACK,0);
+		if(offense.wins < defense.wins){
+			bonus.owner = defense.team.get(0);
+			defense.team.get(0).taken.addCard(bonus);
+		} else if (offense.wins > defense.wins) {
+			bonus.owner = offense.team.get(0);
+			offense.team.get(0).taken.addCard(bonus);
 		}
 		//Count points and add it to the team's point basket
 		int points = 0;
@@ -70,9 +96,10 @@ public class Round {
 		}
 		//Reset
 		for(Player player : players) {
-			System.out.printf("%s have %d points\n", player.name, player.points);
 			player.taken = new Hand();
 		}
+		System.out.printf("team 1 have %d points\n", Game.game.teams[0].points);
+		System.out.printf("team 2 have %d points\n", Game.game.teams[1].points);
 	}
 
 	Player startBid() {

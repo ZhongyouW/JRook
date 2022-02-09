@@ -40,17 +40,17 @@ public class Game extends JFrame {
 				game.setVisible(true);
 				game.currentRound.start();
 			}
-			JOptionPane.showMessageDialog(null, game.getWinner().name + "won the game!");
+			JOptionPane.showMessageDialog(null, game.getWinner() + " won the game!");
 		} else {
 			throw new IllegalStateException("Only one game instance can exist at a time!");
 		}
 	}
 
-	public Player getWinner() {
-		for(Player player : players) {
-			if(player.points >= 500) {
-				return player;
-			}
+	public Team getWinner() {
+		if((teams[0].points > teams[1].points) && teams[0].points >= 500) {
+			return teams[0];
+		} else if((teams[1].points > teams[0].points) && teams[1].points >= 500) {
+			return teams[1];
 		}
 		return null;
 	}
@@ -141,7 +141,7 @@ public class Game extends JFrame {
 
 	public static String getBid(int currentBid) {
 		return JOptionPane.showInputDialog(null,
-				String.format("Input your bid: Min = %d, Max = %d", currentBid + 5, 200));
+				String.format("Your turn to bid! \nCurrent bid: %d \nMaximum bid = %d", currentBid, 180));
 	}
 
 	public static Card.Suit getColor() {
