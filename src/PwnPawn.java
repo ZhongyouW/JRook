@@ -26,7 +26,7 @@ public class PwnPawn extends Agent{
         int value = hand.getValue();
         int preferredBid = ((int)Math.round((value * 4.5 * riskTolerance)/5))*5;
         //Clamp preferredBid between 200 and 70
-        preferredBid = Math.max(70, Math.min(180, preferredBid));
+        preferredBid = Math.max(70, Math.min(200, preferredBid));
         if(currentBid < preferredBid) {
             return currentBid += 5;
         }

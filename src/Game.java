@@ -141,7 +141,7 @@ public class Game extends JFrame {
 
 	public static String getBid(int currentBid) {
 		return JOptionPane.showInputDialog(null,
-				String.format("Your turn to bid! \nCurrent bid: %d \nMaximum bid = %d", currentBid, 180));
+				String.format("Your turn to bid! \nCurrent bid: %d \nMaximum bid = %d", currentBid, 200));
 	}
 
 	public static Card.Suit getColor() {
