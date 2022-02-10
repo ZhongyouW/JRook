@@ -32,14 +32,14 @@ public class Game extends JFrame {
 	public static void main(String[] args) throws IOException {
 		if (game == null) {
 			// Player have to go first, will fix later if we add multiplayer
-			Player[] players = { new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn() };
+			String name = JOptionPane.showInputDialog("What is your name?");
+			Player[] players = { new Human(name), new PwnPawn(), new PwnPawn(), new PwnPawn() };
 
 			game = new Game(players);
 
 			game.initiate();
 
-			String name = JOptionPane.showInputDialog("What is your name?");
-			players[0].name = name;
+
 
 			while ((game.getWinner() == null)) {
 				game.startRound();
@@ -141,6 +141,7 @@ public class Game extends JFrame {
 		CounterPanel team2Panel = new CounterPanel(teams[1]);
 		counterPanel.add(team1Panel, BorderLayout.WEST);
 		counterPanel.add(team2Panel, BorderLayout.EAST);
+		sidePanel.add(counterPanel, BorderLayout.SOUTH);
 	}
 
 	private void startRound() {
@@ -225,14 +226,15 @@ class Commentary extends JPanel {
 }
 
 class CounterPanel extends JPanel {
-	private BufferedImage bgImage;
-	JTextPane counter, points;
+	private Image bgImage;
+	JLabel counter, points;
 	private Team team;
 
 	public CounterPanel(Team team) {
 		super();
 		try {
-			bgImage = ImageIO.read(new File("resource\\card\\Back.png"));
+			BufferedImage image = ImageIO.read(new File("resource\\card\\Back.png"));
+			bgImage = image.getScaledInstance(Hand.cardWidth, Hand.cardHeight, Image.SCALE_SMOOTH);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -240,20 +242,21 @@ class CounterPanel extends JPanel {
 		this.setLayout(new BorderLayout());
 		this.team = team;
 
-		JTextPane label = new JTextPane();
-		label.setText(team.toString());
+		String format = "<html>%s<br/>%s</html>";
+		JLabel label = new JLabel(String.format(format,team.team.get(0).name,team.team.get(1).name), SwingConstants.CENTER);
 		this.add(label, BorderLayout.NORTH);
 
-		counter = new JTextPane();
+		counter = new JLabel("",SwingConstants.CENTER);
+		counter.setFont(new Font("Serif", Font.PLAIN, 36));
 		this.add(counter, BorderLayout.CENTER);
 
-		points = new JTextPane();
+		points = new JLabel();
 		this.add(points, BorderLayout.SOUTH);
 	}
 	@Override
 	protected void paintComponent(Graphics g) {
 		counter.setText(""+team.taken.size);
-		points.setText("" + team.points);
+		points.setText(" points: " + team.points);
 		super.paintComponent(g);
 		g.drawImage(bgImage, 0, 0, null);
 	}

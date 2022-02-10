@@ -19,10 +19,11 @@ public class Hand {
 
 	public HashMap<Card.Suit, ArrayList<Card>> hand;
 	public JPanel panel;
+	public int size;
 
-	static Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-	static final int screenWidth = size.width;
-	static final int screenHeight = size.height;
+	static Dimension screenSizesize = Toolkit.getDefaultToolkit().getScreenSize();
+	static final int screenWidth = screenSizesize.width;
+	static final int screenHeight = screenSizesize.height;
 	static final int height = screenHeight / 5;
 	static final int width = screenWidth * 5 / 6;
 	static final double ratio = 0.722;
@@ -41,6 +42,7 @@ public class Hand {
 		panel.setBackground(new Color(210, 210, 210));
 
 		hand = new HashMap<>();
+		size = 0;
 		for (Card.Suit suit : Card.Suit.values()) {
 			this.hand.put(suit, new ArrayList<Card>());
 		}
@@ -60,6 +62,7 @@ public class Hand {
 		else
 			panel.add(card.getImageButton(cardWidth, cardHeight, orientation));
 		Game.game.repaint();
+		size++;
 	}
 
 	public void removeCard(Card card) {
@@ -89,6 +92,7 @@ public class Hand {
 		cp.at.add(at);
 		cp.repaint();
 		//g2d.drawImage(img, at, null);
+		size--;
 	}
 
 	/**
