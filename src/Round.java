@@ -57,7 +57,7 @@ public class Round {
 		Game.plays.add("The trump color is " + trump);
 		Game.trump.setForeground(Card.suitColor.get(trump));
 		trumpCard.suit = trump;
-
+		//Relocate the trump card from the blue suit to the trump suit
 		trumpCard.owner.hand.getSuit(Card.Suit.BLUE).remove(trumpCard);
 		trumpCard.owner.hand.getSuit(trump).add(trumpCard);
 		// Give nest to topBidder and let them throw out 5 cards.
@@ -78,28 +78,21 @@ public class Round {
 		Card bonus = new Card(Card.Suit.BLACK, 0);
 		if (offense.wins < defense.wins) {
 			bonus.owner = defense.team.get(0);
-			defense.team.get(0).taken.addCard(bonus);
+			defense.taken.addCard(bonus);
 		} else if (offense.wins > defense.wins) {
 			bonus.owner = offense.team.get(0);
-			offense.team.get(0).taken.addCard(bonus);
+			offense.taken.addCard(bonus);
 		}
-
-		// Count points and add it to the team's point basket
-		int points = 0;
-		for (Player player : offense.team) {
-			points += player.getPoints();
-		}
+		//Count points and add it to the team's point basket
+		int points = offense.getPoints();
 		System.out.println("Offense team got " + points + " points");
-		// Add bid according to if bid was reached
-		offense.points += (points >= bid) ? bid : -bid;
-		// Add points to losing team
-		for (Player player : defense.team) {
-			defense.points += player.getPoints();
-		}
-		// Reset
-		for (Player player : players) {
-			player.taken = new Hand();
-		}
+		//Add bid according to if bid was reached
+		offense.points += (points >= bid)? bid: -bid;
+		//Add points to losing team
+		defense.points += defense.getPoints();
+		//Reset
+		defense.taken = new Hand();
+		offense.taken = new Hand();
 		System.out.printf("team 1 have %d points\n", Game.game.teams[0].points);
 		System.out.printf("team 2 have %d points\n", Game.game.teams[1].points);
 

@@ -1,9 +1,12 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -30,14 +33,14 @@ public class Game extends JFrame {
 		if (game == null) {
 			// Player have to go first, will fix later if we add multiplayer
 			Player[] players = { new Human("Jack"), new PwnPawn(), new PwnPawn(), new PwnPawn() };
-			
+
 			game = new Game(players);
 
 			game.initiate();
-			
+
 			String name = JOptionPane.showInputDialog("What is your name?");
 			players[0].name = name;
-			
+
 			while ((game.getWinner() == null)) {
 				game.startRound();
 				game.setVisible(true);
@@ -130,6 +133,14 @@ public class Game extends JFrame {
 		wins.setPreferredSize(new Dimension(width, height*3 / 8));
 		wins.setFont(new Font("Arial", Font.BOLD, width / 90));
 		sidePanel.add(wins, BorderLayout.SOUTH);
+		//Counter Panel
+		JPanel counterPanel = new JPanel();
+		sidePanel.setBackground(new Color(220,220,220));
+		counterPanel.setLayout(new BorderLayout());
+		CounterPanel team1Panel = new CounterPanel(teams[0]);
+		CounterPanel team2Panel = new CounterPanel(teams[1]);
+		counterPanel.add(team1Panel, BorderLayout.WEST);
+		counterPanel.add(team2Panel, BorderLayout.EAST);
 	}
 
 	private void startRound() {
@@ -210,5 +221,40 @@ class Commentary extends JPanel {
 		list.add(t);
 		this.repaint();
 		this.revalidate();
+	}
+}
+
+class CounterPanel extends JPanel {
+	private BufferedImage bgImage;
+	JTextPane counter, points;
+	private Team team;
+
+	public CounterPanel(Team team) {
+		super();
+		try {
+			bgImage = ImageIO.read(new File("resource\\card\\Back.png"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		this.setPreferredSize(new Dimension(Hand.cardWidth, Hand.cardHeight));
+		this.setLayout(new BorderLayout());
+		this.team = team;
+
+		JTextPane label = new JTextPane();
+		label.setText(team.toString());
+		this.add(label, BorderLayout.NORTH);
+
+		counter = new JTextPane();
+		this.add(counter, BorderLayout.CENTER);
+
+		points = new JTextPane();
+		this.add(points, BorderLayout.SOUTH);
+	}
+	@Override
+	protected void paintComponent(Graphics g) {
+		counter.setText(""+team.taken.size);
+		points.setText("" + team.points);
+		super.paintComponent(g);
+		g.drawImage(bgImage, 0, 0, null);
 	}
 }

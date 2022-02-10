@@ -20,14 +20,14 @@ public class Hand {
 	public HashMap<Card.Suit, ArrayList<Card>> hand;
 	public JPanel panel;
 
-	Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-	final int screenWidth = size.width;
-	final int screenHeight = size.height;
-	final int height = screenHeight / 5;
-	final int width = screenWidth * 5 / 6;
-	final double ratio = 0.722;
-	final int cardHeight = height * 3 / 4;
-	final int cardWidth = (int) (cardHeight * ratio);
+	static Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+	static final int screenWidth = size.width;
+	static final int screenHeight = size.height;
+	static final int height = screenHeight / 5;
+	static final int width = screenWidth * 5 / 6;
+	static final double ratio = 0.722;
+	public static final int cardHeight = height * 3 / 4;
+	public static final int cardWidth = (int) (cardHeight * ratio);
 	boolean side;
 	Orientation orientation;
 

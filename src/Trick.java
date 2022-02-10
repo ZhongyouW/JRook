@@ -73,7 +73,7 @@ public class Trick {
 		Player winner = getMostValuble(cards).owner;
 		// Give the card to the Winner's pile
 		for (Card card : cards) {
-			winner.taken.addCard(card);
+			winner.team.taken.addCard(card);
 		}
 
 		try {

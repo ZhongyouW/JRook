@@ -89,7 +89,7 @@ public class Card {
 		BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_4BYTE_ABGR);
 		// Get Image file
 		try {
-			File file = null;
+			File file;
 			File file2 = null;
 			if (!owner.human) {
 				file = new File("resource\\card\\Back.png");

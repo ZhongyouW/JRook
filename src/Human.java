@@ -49,7 +49,7 @@ public class Human extends Player{
                 if(x > currentBid+4 && x <= 200)
                     break;
                 else
-                    Game.alert("Your bid must be between " + (currentBid+5) + " and 200.");
+                    Game.alert("Your bid must be between " + (currentBid+5) + " and 180.");
             } else {
                 Game.alert("Your input was not a valid number, press cancel if you want to pass!");
             }

@@ -7,19 +7,17 @@ import java.util.ArrayList;
 abstract class Player {
     String name;
     Hand hand;
-    int points;
+    Team team;
     Boolean selected = false;
     Card selection;
     /**
      * Cards taken from tricks which will be tallied towards the points
      */
-    Hand taken;
     boolean human;
 
     public Player(String name, Hand hand) {
         this.name = name;
         this.hand = hand;
-        this.taken = new Hand();
     }
     public Player(String name, boolean human) {
         this(name, new Hand());
@@ -43,11 +41,4 @@ abstract class Player {
      * @return return the color which this player wish to be the trump card
      */
     public abstract Card.Suit getPreferredColor();
-
-    /**
-     * @return the total value of the player's taken pile
-     */
-    public int getPoints() {
-        return taken.getValue();
-    }
 }
